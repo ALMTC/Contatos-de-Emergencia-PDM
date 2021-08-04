@@ -27,6 +27,8 @@ public class PerfilUsuario_Activity extends AppCompatActivity implements BottomN
     EditText edNome;
     EditText edEmail;
     Switch swLogado;
+    Switch swLigarAuto;
+    Switch swDeletar;
 
     Button btModificar;
     BottomNavigationView bnv;
@@ -47,6 +49,8 @@ public class PerfilUsuario_Activity extends AppCompatActivity implements BottomN
         edNome=findViewById(R.id.edtNome);
         edEmail=findViewById(R.id.edEmail);
         swLogado=findViewById(R.id.swLogado);
+        swLigarAuto=findViewById(R.id.swLigarAuto);
+        swDeletar=findViewById(R.id.swDeletar);
 
         Intent quemChamou = this.getIntent();
         if (quemChamou != null) {
@@ -59,11 +63,13 @@ public class PerfilUsuario_Activity extends AppCompatActivity implements BottomN
             }
         }
         if (user != null) {
-                   edUser.setText(user.getLogin());
+                    edUser.setText(user.getLogin());
                     edPass.setText(user.getSenha());
                     edNome.setText(user.getNome());
                     edEmail.setText(user.getEmail());
                     swLogado.setChecked(user.isManterLogado());
+                    swLigarAuto.setChecked(user.isLigarAuto());
+                    swDeletar.setChecked(user.isDeletar());
         }
 
         btModificar.setOnClickListener(new View.OnClickListener() {
@@ -74,6 +80,8 @@ public class PerfilUsuario_Activity extends AppCompatActivity implements BottomN
                 user.setSenha(edPass.getText().toString());
                 user.setEmail(edEmail.getText().toString());
                 user.setManterLogado(swLogado.isChecked());
+                user.setLigarAuto(swLigarAuto.isChecked());
+                user.setDeletar(swDeletar.isChecked());
                 salvarModificacoes(user);
             }
         });
@@ -111,6 +119,8 @@ public class PerfilUsuario_Activity extends AppCompatActivity implements BottomN
         //Escrever no SharedPreferences
         escritor.putString("email",user.getEmail());
         escritor.putBoolean("manterLogado",user.isManterLogado());
+        escritor.putBoolean("ligar",user.isLigarAuto());
+        escritor.putBoolean("deletar", user.isDeletar());
 
 
         //Falta Salvar o E-mail
@@ -119,6 +129,8 @@ public class PerfilUsuario_Activity extends AppCompatActivity implements BottomN
 
         Toast.makeText(PerfilUsuario_Activity.this,"Modificações Salvas",Toast.LENGTH_LONG).show() ;
 
-        finish();
+        Intent intent = new Intent(this, ListaDeContatos_Activity.class);
+        intent.putExtra("usuario", user);
+        startActivity(intent);
     }
 }

@@ -41,19 +41,6 @@ public class ChecagemLogin_Activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_checagem_login);
 
-      /*  User userPDM= new User();
-        userPDM.setNome("Einstein");
-      // userPDM.setTema_escuro(true);
-        Contato c= new Contato();
-        c.setNome("Newton");
-        c.setNumero("tel:+888888");
-        userPDM.getContatos().add(c);
-
-        Intent intentPDM= new Intent(this, ListaDeContatos_Activity.class);
-        intentPDM.putExtra("usuarioPDM",userPDM);
-        startActivity(intentPDM);
-
-*/
 
         //Existe um usuário padrão logado?
         if(montarObjetoUserSemLogar()){
@@ -171,10 +158,10 @@ public class ChecagemLogin_Activity extends AppCompatActivity {
         String nomeSalvo = temUser.getString("nome","");
         String emailSalvo = temUser.getString("email","");
         boolean manterLogado=temUser.getBoolean("manterLogado",false);
-        boolean temaEscuro=temUser.getBoolean("tema",false);
+        boolean LigarAuto=temUser.getBoolean("ligar",false);
+        boolean deletar = temUser.getBoolean("deletar", false);
 
-        user=new User(nomeSalvo,loginSalvo,senhaSalva,emailSalvo,manterLogado);
-        user.setTema_escuro(temaEscuro);
+        user=new User(nomeSalvo,loginSalvo,senhaSalva,emailSalvo,manterLogado, LigarAuto, deletar);
         return user;
     }
 

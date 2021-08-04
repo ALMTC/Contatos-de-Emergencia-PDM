@@ -10,11 +10,9 @@
         android:id="@+id/layoutH"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"
         android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:background="#88FCD3C6"
+        android:layout_marginTop="20dp"
+        android:background="#808CF2"
         android:orientation="horizontal"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -23,7 +21,7 @@
             android:id="@+id/buscarImg"
             android:layout_width="48dp"
             android:layout_height="match_parent"
-            app:srcCompat="@drawable/ic_action_buscar"></ImageView>
+            app:srcCompat="@drawable/ic_action_buscarnovo"></ImageView>
 
         <EditText
             android:id="@+id/edtBusca"
@@ -32,20 +30,19 @@
             android:ems="10"
             android:inputType="textPersonName"
             android:text="Seus contatos?"
-            android:textColor="#FF5722"
+            android:textColor="#374AF0"
             android:textSize="20dp" />
 
         <Button
             android:id="@+id/button"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:background="#FF5722"
-            android:textSize="18dp"
-            android:textStyle="bold"
+            android:background="#1A2270"
             android:onClick="onClickBuscar"
             android:text="Buscar"
             android:textColor="#FFFFFF"
-            />
+            android:textSize="18dp"
+            android:textStyle="bold" />
     </LinearLayout>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
@@ -55,16 +52,6 @@
         android:background="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:menu="@menu/activity_main_bottom_actions" />
-
-    <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="10dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/layoutH"
-        app:srcCompat="@drawable/ic_action_mudarv2" />
 
     <ListView
         android:id="@+id/listContatosDoCell"
@@ -77,7 +64,8 @@
         android:divider="#FF5722"
         android:dividerHeight="1dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/imageView2" />
+        app:layout_constraintTop_toBottomOf="@+id/layoutH" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

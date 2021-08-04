@@ -10,27 +10,30 @@ public class User implements Serializable {
     String senha;
     String email;
     boolean manterLogado=false;
-    boolean tema_escuro=false;
+    boolean ligarAuto=false;
+    boolean deletar=false;
     ArrayList<Contato> contatos;
 
 
-    public boolean isTema_escuro() {
-        return tema_escuro;
-    }
+    public boolean isLigarAuto() { return ligarAuto; }
 
-    public void setTema_escuro(boolean tema_escuro) {
-        this.tema_escuro = tema_escuro;
-    }
+    public void setLigarAuto(boolean LigarAuto) { this.ligarAuto = LigarAuto; }
+
+    public boolean isDeletar() { return deletar; }
+
+    public void setDeletar(boolean deletar) { this.deletar = deletar; }
 
 
 
-    public User(String nome, String login, String password, String email, boolean manterLogado) {
+    public User(String nome, String login, String password, String email, boolean manterLogado, boolean LigarAuto, boolean deletar) {
         this.nome = nome;
         this.login=login;
         this.senha=password;
         this.email=email;
         this.manterLogado=manterLogado;
         this.contatos = new ArrayList<Contato>();
+        this.ligarAuto = LigarAuto;
+        this.deletar = deletar;
     }
 
     public User() {
@@ -52,6 +55,7 @@ public class User implements Serializable {
     public void setLogin(String login) {
         this.login = login;
     }
+
     public String getSenha() {
         return senha;
     }
@@ -75,6 +79,7 @@ public class User implements Serializable {
     public void setManterLogado(boolean manterLogado) {
         this.manterLogado = manterLogado;
     }
+
     public ArrayList<Contato> getContatos() {
         return contatos;
     }

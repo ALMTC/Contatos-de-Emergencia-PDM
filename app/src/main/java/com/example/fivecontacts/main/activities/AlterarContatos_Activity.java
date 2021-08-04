@@ -21,6 +21,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.fivecontacts.R;
 import com.example.fivecontacts.main.model.Contato;
@@ -30,6 +31,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectOutputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 
 public class AlterarContatos_Activity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
 
@@ -154,14 +156,29 @@ public class AlterarContatos_Activity extends AppCompatActivity implements Botto
 
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                        //Pega a lista de contatos e vê se o contato a ser adicionado já existe
+                        ArrayList<Contato> contatos = user.getContatos();
+                        boolean existe = false;
+
                         Contato c= new Contato();
                         c.setNome(nomesContatos[i]);
                         c.setNumero("tel:+"+telefonesContatos[i]);
-                        salvarContato(c);
-                        Intent intent = new Intent(getApplicationContext(), ListaDeContatos_Activity.class);
-                        intent.putExtra("usuario", user);
-                        startActivity(intent);
-                        finish();
+
+                        for(int j = 0; i< contatos.size(); i++){
+                            if(contatos.get(j).getNumero().equals(c.getNumero())){
+                                existe = true;
+                            }
+                        }
+                        if (existe){
+                            Toast toast = Toast.makeText(getApplicationContext(), "O contato já está salvo", Toast.LENGTH_SHORT);
+                            toast.show();
+                        }else {
+                            salvarContato(c);
+                            Intent intent = new Intent(getApplicationContext(), ListaDeContatos_Activity.class);
+                            intent.putExtra("usuario", user);
+                            startActivity(intent);
+                            finish();
+                        }
 
                     }
                 });

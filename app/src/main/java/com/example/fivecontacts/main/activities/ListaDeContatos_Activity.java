@@ -36,8 +36,10 @@ import com.example.fivecontacts.main.utils.UIEducacionalPermissao;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -74,9 +76,6 @@ public class ListaDeContatos_Activity extends AppCompatActivity implements UIEdu
                     setTitle("Contatos de Emergência de "+user.getNome());
                   //  preencherListView(user); //Montagem do ListView
                     preencherListViewImagens(user);
-                  //  if (user.isTema_escuro()){
-                    //    ((ConstraintLayout) (lv.getParent())).setBackgroundColor(Color.BLACK);
-                    //}
                 }
             }
         }
@@ -133,7 +132,11 @@ public class ListaDeContatos_Activity extends AppCompatActivity implements UIEdu
 
             for(int i =0; i < contatos.size(); i++) {
                 Map<String,Object> listItemMap = new HashMap<String,Object>();
-                listItemMap.put("imageId", R.drawable.ic_action_ligar_list);
+                if(user.isDeletar()){
+                    listItemMap.put("imageId", R.drawable.ic_action_deletar);
+                }else {
+                    listItemMap.put("imageId", R.drawable.ic_action_ligarn);
+                }
                 listItemMap.put("contato", contatosNomes[i]);
                 listItemMap.put("abrevs",contatosAbrevs[i]);
                 itemDataList.add(listItemMap);
@@ -150,12 +153,32 @@ public class ListaDeContatos_Activity extends AppCompatActivity implements UIEdu
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
 
-                    if (checarPermissaoPhone_SMD(contatos.get(i).getNumero())) {
+                    if(user.isDeletar()){
 
-                        Uri uri = Uri.parse(contatos.get(i).getNumero());
-                         //  Intent itLigar = new Intent(Intent.ACTION_DIAL, uri);
-                            Intent itLigar = new Intent(Intent.ACTION_CALL, uri);
-                        startActivity(itLigar);
+                        ArrayList<Contato> aux = new ArrayList<>(contatos.size() - 1);
+
+                        for(int j =0; j<contatos.size();j++){
+                            if (contatos.get(j).equals(contatos.get(i))){
+
+                            }else{
+                                aux.add(contatos.get(j));
+                            }
+                        }
+                        user.setContatos(aux);
+                        resetaContatos(user);
+                        preencherListViewImagens(user);
+                    }else {
+                        if (checarPermissaoPhone_SMD(contatos.get(i).getNumero())) {
+
+                            Uri uri = Uri.parse(contatos.get(i).getNumero());
+                            Intent itLigar;
+                            if (user.isLigarAuto()) {
+                                itLigar = new Intent(Intent.ACTION_CALL, uri);
+                            } else {
+                                itLigar = new Intent(Intent.ACTION_DIAL, uri);
+                            }
+                            startActivity(itLigar);
+                        }
                     }
 
 
@@ -322,8 +345,10 @@ public class ListaDeContatos_Activity extends AppCompatActivity implements UIEdu
         String nomeSalvo = temUser.getString("nome","");
         String emailSalvo = temUser.getString("email","");
         boolean manterLogado=temUser.getBoolean("manterLogado",false);
+        boolean ligarAuto=temUser.getBoolean("ligar",false);
+        boolean deletar = temUser.getBoolean("deletar",false);
 
-        user=new User(nomeSalvo,loginSalvo,senhaSalva,emailSalvo,manterLogado);
+        user=new User(nomeSalvo,loginSalvo,senhaSalva,emailSalvo,manterLogado, ligarAuto, deletar);
         return user;
     }
 
@@ -334,6 +359,33 @@ public class ListaDeContatos_Activity extends AppCompatActivity implements UIEdu
           String[] permissions ={Manifest.permission.CALL_PHONE};
           requestPermissions(permissions, 2222);
 
+        }
+
+
+    }
+
+    private void resetaContatos(User user){
+
+        ArrayList<Contato> contatos = user.getContatos();
+        //reseta lista de contatos
+        SharedPreferences salvaContatos = getSharedPreferences("contatos",Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = salvaContatos.edit();
+        editor.clear().commit();
+
+        //Atualiza os contatos
+        try {
+            for (int i = 0; i< contatos.size();i++){
+                ByteArrayOutputStream dt = new ByteArrayOutputStream();
+                ObjectOutputStream oos = new ObjectOutputStream(dt);
+                dt = new ByteArrayOutputStream();
+                oos = new ObjectOutputStream(dt);
+                oos.writeObject(contatos.get(i));
+                String contatoSerializado= dt.toString(StandardCharsets.ISO_8859_1.name());
+                editor.putString("contato"+(i+1), contatoSerializado);
+            }
+            editor.putInt("numContatos",contatos.size());
+        }catch(Exception e){
+            e.printStackTrace();
         }
 
 

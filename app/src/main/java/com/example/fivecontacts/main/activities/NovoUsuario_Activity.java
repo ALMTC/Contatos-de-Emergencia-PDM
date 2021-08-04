@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.InputType;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -28,8 +27,7 @@ public class NovoUsuario_Activity extends AppCompatActivity {
     EditText edNome;
     EditText edEmail;
     Switch swLogado;
-
-    Switch swTema;
+    Switch swLigarAuto;
     Button btCriar;
 
 
@@ -45,7 +43,7 @@ public class NovoUsuario_Activity extends AppCompatActivity {
         edEmail=findViewById(R.id.edEmail);
         swLogado=findViewById(R.id.swLogado);
 
-        swTema= findViewById(R.id.swTema);
+        swLigarAuto= findViewById(R.id.swLigarAuto);
 
         setTitle("Novo Usuário");
 
@@ -123,7 +121,8 @@ public class NovoUsuario_Activity extends AppCompatActivity {
                 boolean manterLogado;
                 manterLogado= swLogado.isChecked();
 
-                boolean temaEscuro=swTema.isChecked();
+                boolean ligarAuto;
+                ligarAuto = swLigarAuto.isChecked();
 
                 SharedPreferences salvaUser= getSharedPreferences("usuarioPadrao", Activity.MODE_PRIVATE);
                 SharedPreferences.Editor escritor= salvaUser.edit();
@@ -133,17 +132,22 @@ public class NovoUsuario_Activity extends AppCompatActivity {
                 escritor.putString("login",login);
 
                 //Escrever no SharedPreferences
-                //Falta Salvar o E-mail
                 escritor.putString("email",email);
                 escritor.putBoolean("manterLogado",manterLogado);
+                escritor.putBoolean("ligar",ligarAuto);
+                escritor.putBoolean("deletar", false);
 
-                escritor.putBoolean("tema",temaEscuro);
 
                 escritor.commit(); //Salva em Disco
 
+
+                SharedPreferences salvaContatos = getSharedPreferences("contatos",Activity.MODE_PRIVATE);
+                SharedPreferences.Editor editor = salvaContatos.edit();
+                editor.clear().commit();
+
                 //Salvando o user
 
-                User user =new User(nome,login,senha,email,manterLogado);
+                User user =new User(nome,login,senha,email,manterLogado, ligarAuto, false);
 
 
                 Intent intent=new Intent(NovoUsuario_Activity.this, AlterarContatos_Activity.class);
